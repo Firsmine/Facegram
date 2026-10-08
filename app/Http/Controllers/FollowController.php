@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+
 
 class FollowController extends Controller
 {
     public function follow(Request $request, string $username){
         $user = $request->user();
-        $targetUser = user::where('username', $username)->first();
+        $targetUser = User::where('username', $username)->first();
         if(!$targetUser){
             return response()->json([
                 'success'=>false,

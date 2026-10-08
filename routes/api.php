@@ -16,16 +16,17 @@ Route::prefix('v1')->group(function(){
             // AUTH
             Route::post('/logout', [UserController::class, 'logout']);
             Route::get('/me', [UserController::class, 'me']);
-
-            // POSTS
-            Route::get('/posts', [PostController::class, 'index']);
-            Route::post('/posts', [PostController::class, 'store']);
-            Route::delete('/posts/{post}', [PostController::class, 'destroy']);
-
-            // FOLLOW
-            Route::post('/users/{username}/follow', [FollowController::class, 'follow']);
-            Route::delete('/users/{username}/unfollow', [FollowController::class, 'unfollow']);
-            Route::get('/following', [FollowController::class, 'following']);
         });
+    });
+    Route::middleware('auth:sanctum')->group(function(){
+        // POSTS
+        Route::get('/posts', [PostController::class, 'index']);
+        Route::post('/posts', [PostController::class, 'store']);
+        Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+
+        // FOLLOW
+        Route::post('/users/{username}/follow', [FollowController::class, 'follow']);
+        Route::delete('/users/{username}/unfollow', [FollowController::class, 'unfollow']);
+        Route::get('/following', [FollowController::class, 'following']);
     });
 });

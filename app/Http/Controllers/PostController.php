@@ -10,7 +10,7 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = $request->user();
 
@@ -43,14 +43,14 @@ class PostController extends Controller
     {
         $request->validate([
             'caption'=>'nullable|string|max:1000',
-            'image'=>'required|image|mimes:jpg,jpeg,png|max:2028'
+            'image'=>'required|string'
         ]);
-        $imagePath = $request->file('image')->store('posts', 'public');
+        $image = $request->image;
 
         $post = Post::create([
             'user_id'=>$request->user()->id,
             'caption'=>$request->caption,
-            'image'=>$imagePath
+            'image'=>$image
         ]);
         $post->load('user');
 
@@ -90,14 +90,11 @@ class PostController extends Controller
      */
     public function destroy(Request $request, Post $post)
     {
-        if ($post->user_id !== $request->user()-id){
+        if ($post->user_id !== $request->user()->id){
             return response()->json([
                 'success'=>false,
                 'message'=>'You are not allowed to delete this post'
             ]);
-        }
-        if($post->image){
-            Storage::disk('public')->delete($post->image);
         }
         $post->delete();
         return response()->json([
